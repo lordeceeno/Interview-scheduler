@@ -1,0 +1,76 @@
+@import "../../scss/variables.scss";
+@import "../../scss/mixins.scss";
+
+.auth_cont {
+  display: flex;
+  min-height: 100vh;
+  text-align: left;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+
+  &__left {
+    flex: 0 0 50%;
+    // background-color: $color7;
+    background-image: url(../../assets/images/background.jpg);
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 50%;
+    background-color: $color2;
+    padding: 48px;
+    padding-right: 80px;
+    form {
+      width: 100%;
+    }
+  }
+
+  @include respond(tablet) {
+    &__left {
+      display: none;
+    }
+
+    &__right {
+      flex: 0 0 100%;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+
+  &__logo {
+    text-align: left;
+    margin-bottom: 48px;
+  }
+
+  &__heading {
+    margin-bottom: 8px;
+    color: $color4;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  &__subheading {
+    color: $color1;
+    font-size: 24px;
+    margin-bottom: 48px;
+  }
+
+  &__button {
+    width: 100%;
+    padding: 18px 0;
+    background-color: $color9;
+    color: $color7;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  &__btmtxt {
+    font-size: 18px;
+    color: $color1;
+  }
+}

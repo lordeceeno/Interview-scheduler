@@ -1,0 +1,45 @@
+@import "../../scss/variables.scss";
+@import "../../scss/mixins.scss";
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 32px;
+  position: relative;
+  z-index: 10;
+
+  &__left {
+  }
+
+  &__right {
+    display: flex;
+
+    &__link {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+        padding-bottom: 5px;
+        color: $color1;
+        // border-bottom: 3px solid $color8;
+      }
+
+      //   a.active {
+      //     border-bottom: 3px solid $color9;
+      //   }
+    }
+
+    &__link:not(:last-child) {
+      margin-right: 48px;
+    }
+
+    &__link img {
+      height: 32px;
+      margin-bottom: 4px;
+    }
+  }
+}

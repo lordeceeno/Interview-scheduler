@@ -1,0 +1,59 @@
+@import "./variables.scss";
+@font-face {
+  font-family: "GT America";
+  src: local("GT America"),
+    url(../assets/fonts/GTAmerica/Standard/GT-America-Regular.otf)
+      format("opentype");
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: $color2;
+  font-family: GT America;
+}
+
+.u-margin-bottom-small {
+  margin-bottom: $small-space;
+}
+
+.u-margin-bottom-medium {
+  margin-bottom: $medium-space;
+}
+
+.u-margin-bottom-large {
+  margin-bottom: 75px;
+}
+
+.u-blue-txt {
+  color: $color6;
+  font-weight: 600;
+}
+
+.active {
+  border-bottom: 3px solid $color9;
+}
+
+tbody + thead {
+  display: none;
+}
+
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+  /* background-color: #B11E1E1A; */
+  border-top: 1px solid #b11e1e;
+  border-bottom: 1px solid #b11e1e;
+}
+
+table.dataTable thead {
+  background-color: $color9;
+  color: $color5;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: $color9;
+}
