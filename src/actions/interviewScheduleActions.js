@@ -5,6 +5,8 @@ import {
   CLEAR_ERRORS,
 } from "../constants/interviewScheduleConstants";
 
+// import { DateTime } from "luxon";
+
 const schedules = [
   {
     name: "Miss Tina",
@@ -125,7 +127,10 @@ export const scheduleCandidateInterview = (payload) => async (dispatch) => {
       let overLapError = "";
       let overLapResult = false;
       data.forEach((e) => {
-        let d = [e.start, e.end];
+        let d = [
+          new Date(e.start).toISOString(),
+          new Date(e.end).toISOString(),
+        ];
         start.push(d);
       });
 
@@ -134,8 +139,7 @@ export const scheduleCandidateInterview = (payload) => async (dispatch) => {
       start.forEach((e, i) => {
         if (start[i + 1]) {
           if (e[1] > start[i + 1][0]) {
-            // console.log(e.join(" ") + " overlap");
-            overLapError = e.join(" ");
+            overLapError = e.join(" & ");
             // overLapResult = true;
             // console.log(overLapError);
             return overLapError;
@@ -146,7 +150,7 @@ export const scheduleCandidateInterview = (payload) => async (dispatch) => {
           return overLapResult;
         }
       });
-      console.log(start);
+      // console.log(start);
       return [overLapError, overLapResult];
     };
 
@@ -174,9 +178,39 @@ export const scheduleCandidateInterview = (payload) => async (dispatch) => {
     if (overLapResult) {
       dispatch({
         type: SCHEDULE_INTERVIEW_FAIL,
-        payload: `You already have a session scheduled during ${overLapError} this period`,
+        payload: `You already have a session scheduled between ${overLapError}`,
       });
     } else if (foundInterviewer && !checkForCandidate) {
+      foundInterviewer.booked_events.push(payload);
+      dispatch({
+        type: SCHEDULE_INTERVIEW_SUCCESS,
+        payload: interviewerInfo,
+      });
+      localStorage.setItem("schedules", JSON.stringify(interviewerInfo));
+    } else {
+      dispatch({
+        type: SCHEDULE_INTERVIEW_FAIL,
+        payload: `Candidate "${payload.candidate}" already scheduled for an interview`,
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: SCHEDULE_INTERVIEW_FAIL,
+      payload: "An error occured",
+    });
+  }
+};
+
+// Cancel Candidate Application
+export const cancelCandidateInterview = (payload) => async (dispatch) => {
+  try {
+    dispatch({ type: SCHEDULE_INTERVIEW_REQUEST });
+
+    const foundInterviewer = await interviewerInfo.find(
+      (interviewer) => interviewer.name === payload.interviewer
+    );
+
+    if (foundInterviewer) {
       foundInterviewer.booked_events.push(payload);
       dispatch({
         type: SCHEDULE_INTERVIEW_SUCCESS,

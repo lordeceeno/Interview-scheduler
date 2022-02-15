@@ -13,7 +13,10 @@ import {
 
 import { DateTime } from "luxon";
 
-import { scheduleCandidateInterview } from "../../actions/interviewScheduleActions";
+import {
+  scheduleCandidateInterview,
+  cancelCandidateInterview,
+} from "../../actions/interviewScheduleActions";
 // import Select from "react-select";
 
 const Interviewer = () => {
@@ -32,21 +35,12 @@ const Interviewer = () => {
   });
   const [value, setValue] = React.useState("0:00");
 
-  const result = scheduledData && [
-    ...scheduledData
-      .reduce((r, { booked_events }) => {
-        (booked_events || []).forEach((o) => {
-          r.has(o.candidate) || r.set(o.candidate, { ...o });
+  const result = scheduledData
+    .filter((e) => e.booked_events)
+    .map((e) => e.booked_events.map((link) => link))
+    .reduce((a, b) => a.concat(b), []);
 
-          r.get(o.candidate);
-        });
-
-        return r;
-      }, new Map())
-      .values(),
-  ];
-
-  // console.log(result);
+  console.log(result);
 
   let candidateOptions =
     candidatesData &&
@@ -78,7 +72,7 @@ const Interviewer = () => {
     }));
   };
 
-  const onChange = (event) => {
+  const onFormFieldChange = (event) => {
     setValue(event.target.value);
   };
 
@@ -88,7 +82,6 @@ const Interviewer = () => {
 
     const time = toHHMMSS(seconds);
     setValue(time);
-    // setduration(value);
   };
 
   const getSecondsFromHHMMSS = (value) => {
@@ -124,6 +117,18 @@ const Interviewer = () => {
       .filter((val, index) => val !== "00" || index > 0)
       .join(":")
       .replace(/^0/, "");
+  };
+
+  const secondsToHms = (d) => {
+    d = Number(d);
+    const h = Math.floor(d / 3600);
+    const m = Math.floor((d % 3600) / 60);
+    const s = Math.floor((d % 3600) % 60);
+
+    const hDisplay = h > 0 ? h + (h === 1 ? " hour, " : " hours ") : "";
+    const mDisplay = m > 0 ? m + (m === 1 ? " minute, " : " minutes ") : "";
+    const sDisplay = s > 0 ? s + (s === 1 ? " second" : " seconds") : "";
+    return hDisplay + mDisplay + sDisplay;
   };
 
   const handleCandidateChange = (selectedCandidate) => {
@@ -196,10 +201,13 @@ const Interviewer = () => {
           end: DateTime.fromJSDate(new Date(appointment.end)).toFormat(
             "dd MMM yyyy - HH:mm "
           ),
-          duration: appointment.duration,
+          duration: secondsToHms(appointment.duration),
           action: (
             <Fragment>
-              <button className={styles.auth_cont__cancel__button}>
+              <button
+                className={styles.auth_cont__cancel__button}
+                onClick={cancelInterview}
+              >
                 Cancel
               </button>
             </Fragment>
@@ -217,9 +225,14 @@ const Interviewer = () => {
     end: endInterview(interviewTime.time, setDuration(value)),
   };
 
-  const submitApplication = (e) => {
+  const scheduleInterview = (e) => {
     e.preventDefault();
     dispatch(scheduleCandidateInterview(payload));
+  };
+
+  const cancelInterview = () => {
+    // dispatch(cancelCandidateInterview(payload));
+    console.log("Deleted");
   };
 
   useEffect(() => {
@@ -248,7 +261,7 @@ const Interviewer = () => {
         </div>
         <div className={styles.auth_cont__right}>
           <div className={styles.auth_cont__logo}></div>
-          <form onSubmit={submitApplication}>
+          <form onSubmit={scheduleInterview}>
             <h5 className={styles.auth_cont__heading}>Dashboard</h5>
             <p className={styles.auth_cont__subheading}>
               Schedule interview with candidate
@@ -287,7 +300,7 @@ const Interviewer = () => {
                 type="text"
                 placeholder="Duration of interview"
                 label="Duration of Interview"
-                handleChange={onChange}
+                handleChange={onFormFieldChange}
                 handleBlur={onBlur}
                 value={value}
                 name="duration"
