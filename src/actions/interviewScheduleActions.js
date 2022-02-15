@@ -105,8 +105,6 @@ const getInterviewer = () => {
 
 let interviewerInfo = getInterviewer();
 
-console.log(interviewerInfo);
-
 // Schedule Candidates Application
 export const scheduleCandidateInterview = (payload) => async (dispatch) => {
   try {
@@ -118,8 +116,14 @@ export const scheduleCandidateInterview = (payload) => async (dispatch) => {
 
     const checkOverlap = (filter) => {
       const data = foundInterviewer.booked_events;
-      let start = [[filter.start, filter.end]];
-      let error;
+      let start = [
+        [
+          new Date(filter.start).toISOString(),
+          new Date(filter.end).toISOString(),
+        ],
+      ];
+      let overLapError = "";
+      let overLapResult = false;
       data.forEach((e) => {
         let d = [e.start, e.end];
         start.push(d);
@@ -130,13 +134,23 @@ export const scheduleCandidateInterview = (payload) => async (dispatch) => {
       start.forEach((e, i) => {
         if (start[i + 1]) {
           if (e[1] > start[i + 1][0]) {
-            console.log(e.join(" ") + " overlap");
-            return (error = e.join(" "));
+            // console.log(e.join(" ") + " overlap");
+            overLapError = e.join(" ");
+            // overLapResult = true;
+            // console.log(overLapError);
+            return overLapError;
           }
         }
+        if (overLapError !== "") {
+          overLapResult = true;
+          return overLapResult;
+        }
       });
-      return error;
+      console.log(start);
+      return [overLapError, overLapResult];
     };
+
+    const [overLapError, overLapResult] = checkOverlap(payload);
 
     const candidateExists = (arr, params) => {
       let lookup = {};
@@ -153,18 +167,15 @@ export const scheduleCandidateInterview = (payload) => async (dispatch) => {
     );
 
     checkOverlap(payload);
-    // console.log(checkOverlap(null));
-    const validateOverlap = checkOverlap(payload);
-    console.log(validateOverlap);
+    // // console.log(checkOverlap(null));
+    // const validateOverlap = checkOverlap(payload);
+    // console.log(validateOverlap);
 
-    if (validateOverlap) {
+    if (overLapResult) {
       dispatch({
         type: SCHEDULE_INTERVIEW_FAIL,
-        payload: `You already have a session scheduled during this period "${checkOverlap(
-          payload
-        )}"`,
+        payload: `You already have a session scheduled during ${overLapError} this period`,
       });
-      // checkOverlap([]);
     } else if (foundInterviewer && !checkForCandidate) {
       foundInterviewer.booked_events.push(payload);
       dispatch({

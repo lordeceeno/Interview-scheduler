@@ -199,7 +199,9 @@ const Interviewer = () => {
           duration: appointment.duration,
           action: (
             <Fragment>
-              <button>Cancel</button>
+              <button className={styles.auth_cont__cancel__button}>
+                Cancel
+              </button>
             </Fragment>
           ),
         });
@@ -224,7 +226,7 @@ const Interviewer = () => {
     if (status === 200) {
       toast.success(message);
       dispatch({ type: SCHEDULE_INTERVIEW_RESET });
-    } else if (status === 500 || !status) {
+    } else if (status === 500) {
       toast.error(error);
       dispatch({ type: CLEAR_ERRORS });
     }

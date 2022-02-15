@@ -199,10 +199,14 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, reducer);
 
 const middleWare = [thunk];
+const composeEnhancers = composeWithDevTools({
+  trace: true,
+  traceLimit: 25,
+});
 const store = createStore(
   persistedReducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleWare))
+  composeEnhancers(applyMiddleware(...middleWare))
 );
 
 const persistor = persistStore(store);

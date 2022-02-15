@@ -30,6 +30,15 @@
       width: 100%;
     }
   }
+  &__cancel__button {
+    border: none;
+    color: $color14;
+    background: none;
+    outline: none;
+  }
+  &__cancel__button:focus {
+    outline: none;
+  }
 
   @include respond(tablet) {
     &__left {
