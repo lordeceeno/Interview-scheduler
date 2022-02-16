@@ -11,7 +11,7 @@
   width: 100%;
 
   &__left {
-    flex: 0 0 50%;
+    flex: 0 0 60%;
     // background-color: $color7;
     background-image: url(../../assets/images/background.jpg);
   }
@@ -20,7 +20,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 50%;
+    flex: 0 0 40%;
     background-color: $color2;
     padding: 48px;
     padding-right: 80px;
