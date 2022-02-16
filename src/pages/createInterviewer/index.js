@@ -11,7 +11,7 @@ import { addInterviewer } from "../../actions/createInterviewerActions";
 import {
   CLEAR_ERRORS,
   CREATE_INTERVIEWER_RESET,
-} from "../../constants/interviewerConstants";
+} from "../../constants/interviewScheduleConstants";
 
 const CreateInterviewer = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const CreateInterviewer = () => {
   // const { candidatesData } = useSelector((state) => state.candidate || []);
 
   const { error, message, status } = useSelector(
-    (state) => state.interviewer || []
+    (state) => state.schedules || []
   );
   const [interviwer, setInterviwer] = useState({
     name: "",

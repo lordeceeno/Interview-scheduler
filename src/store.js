@@ -3,14 +3,12 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import { persistStore, persistReducer } from "redux-persist";
 import { candidateApplicationReducer } from "./reducers/candidateReducers";
-import { interviewerReducer } from "./reducers/interviewerReducers";
 import { scheduleInterviewReducer } from "./reducers/interviewScheduleReducers";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import storage from "redux-persist/lib/storage";
 
 const appReducer = combineReducers({
   candidate: candidateApplicationReducer,
-  interviewer: interviewerReducer,
   schedules: scheduleInterviewReducer,
 });
 
@@ -139,54 +137,29 @@ const candidate = [
   },
 ];
 
-const interviewers = [
-  {
-    name: "Miss Tina",
-    work_start: "2022-02-15T11:47",
-    work_end: "2022-02-15T11:47",
-    booked_events: [],
-  },
-  {
-    name: "Mr Smith",
-    work_start: "2022-02-14T07:48",
-    work_end: "2022-02-14T07:48",
-    booked_events: [],
-  },
-  {
-    name: "Mr Samuel",
-    work_start: "2022-02-14T05:48",
-    work_end: "2022-02-14T05:48",
-    booked_events: [],
-  },
-  {
-    name: "Miss Oluchi",
-    work_start: "2022-02-14T08:49",
-    work_end: "2022-02-14T08:49",
-    booked_events: [],
-  },
-  {
-    name: "Pastor Nero",
-    work_start: "2022-02-14T11:50",
-    work_end: "2022-02-14T11:50",
-    booked_events: [],
-  },
-];
+const getScheduleInitialState = () => {
+  if (localStorage.getItem("schedules")) {
+    JSON.parse(localStorage.getItem("schedules"));
+  } else {
+    localStorage.setItem("schedules", JSON.stringify(schedules));
+    return schedules;
+  }
+};
+const getCandidateInitialState = () => {
+  if (localStorage.getItem("candidate")) {
+    JSON.parse(localStorage.getItem("candidate"));
+  } else {
+    localStorage.setItem("candidate", JSON.stringify(candidate));
+    return candidate;
+  }
+};
 
 let initialState = {
   candidate: {
-    candidatesData: localStorage.getItem("candidate")
-      ? JSON.parse(localStorage.getItem("candidate"))
-      : candidate,
+    candidatesData: getCandidateInitialState(),
   },
   schedules: {
-    scheduledData: localStorage.getItem("schedules")
-      ? JSON.parse(localStorage.getItem("schedules"))
-      : schedules,
-  },
-  interviewer: {
-    interviewerData: localStorage.getItem("interviewers")
-      ? JSON.parse(localStorage.getItem("interviewers"))
-      : interviewers,
+    scheduledData: getScheduleInitialState(),
   },
 };
 

@@ -3,62 +3,26 @@ import {
   CREATE_INTERVIEWER_SUCCESS,
   CREATE_INTERVIEWER_FAIL,
   CLEAR_ERRORS,
-} from "../constants/interviewerConstants";
-
-const interviewers = [
-  {
-    name: "Miss Tina",
-    work_start: "2022-02-15T11:47",
-    work_end: "2022-02-15T11:47",
-    booked_events: [],
-  },
-  {
-    name: "Mr Smith",
-    work_start: "2022-02-14T07:48",
-    work_end: "2022-02-14T07:48",
-    booked_events: [],
-  },
-  {
-    name: "Mr Samuel",
-    work_start: "2022-02-14T05:48",
-    work_end: "2022-02-14T05:48",
-    booked_events: [],
-  },
-  {
-    name: "Miss Oluchi",
-    work_start: "2022-02-14T08:49",
-    work_end: "2022-02-14T08:49",
-    booked_events: [],
-  },
-  {
-    name: "Pastor Nero",
-    work_start: "2022-02-14T11:50",
-    work_end: "2022-02-14T11:50",
-    booked_events: [],
-  },
-];
+} from "../constants/interviewScheduleConstants";
 
 const getInterviewers = () => {
-  if (localStorage.getItem("interviewers")) {
-    return JSON.parse(localStorage.getItem("interviewers"));
-  } else {
-    return interviewers;
+  if (localStorage.getItem("schedules")) {
+    return JSON.parse(localStorage.getItem("schedules"));
   }
 };
 
-let interviwersInfo = getInterviewers();
-
 // Submit Candidate Application
 export const addInterviewer = (interviwer) => async (dispatch) => {
+  let interviewersInfo = getInterviewers();
   try {
     dispatch({ type: CREATE_INTERVIEWER_REQUEST });
 
-    const foundInterviewer = await interviwersInfo.find(
+    const foundInterviewer = await interviewersInfo.find(
       (interviwers) => interviwers.name === interviwer.name
     );
 
     if (!foundInterviewer) {
-      interviwersInfo.push({
+      interviewersInfo.push({
         name: interviwer.name,
         work_start: interviwer.work_start,
         work_end: interviwer.work_start,
@@ -67,9 +31,9 @@ export const addInterviewer = (interviwer) => async (dispatch) => {
 
       dispatch({
         type: CREATE_INTERVIEWER_SUCCESS,
-        payload: interviwersInfo,
+        payload: interviewersInfo,
       });
-      localStorage.setItem("interviewers", JSON.stringify(interviwersInfo));
+      localStorage.setItem("schedules", JSON.stringify(interviewersInfo));
     } else {
       dispatch({
         type: CREATE_INTERVIEWER_FAIL,

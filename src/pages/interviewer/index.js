@@ -17,13 +17,10 @@ import {
   scheduleCandidateInterview,
   cancelCandidateInterview,
 } from "../../actions/interviewScheduleActions";
-// import Select from "react-select";
 
 const Interviewer = () => {
-  // const navigate = useNavigate();
   const dispatch = useDispatch();
   const { candidatesData } = useSelector((state) => state.candidate || []);
-  const { interviewerData } = useSelector((state) => state.interviewer || []);
   const { scheduledData, status, error, message } = useSelector(
     (state) => state.schedules || []
   );
@@ -35,12 +32,12 @@ const Interviewer = () => {
   });
   const [value, setValue] = React.useState("0:00");
 
-  const result = scheduledData
-    .filter((e) => e.booked_events)
-    .map((e) => e.booked_events.map((link) => link))
-    .reduce((a, b) => a.concat(b), []);
-
-  console.log(result);
+  const result =
+    scheduledData &&
+    scheduledData
+      .filter((e) => e.booked_events)
+      .map((e) => e.booked_events.map((link) => link))
+      .reduce((a, b) => a.concat(b), []);
 
   let candidateOptions =
     candidatesData &&
@@ -54,8 +51,8 @@ const Interviewer = () => {
     });
 
   let interviewerOptions =
-    interviewerData &&
-    interviewerData.map((interviewer) => {
+    scheduledData &&
+    scheduledData.map((interviewer) => {
       const container = {};
 
       container.value = interviewer.name;
@@ -206,7 +203,7 @@ const Interviewer = () => {
             <Fragment>
               <button
                 className={styles.auth_cont__cancel__button}
-                onClick={cancelInterview}
+                onClick={() => cancelInterview(appointment.candidate)}
               >
                 Cancel
               </button>
@@ -230,9 +227,8 @@ const Interviewer = () => {
     dispatch(scheduleCandidateInterview(payload));
   };
 
-  const cancelInterview = () => {
-    // dispatch(cancelCandidateInterview(payload));
-    console.log("Deleted");
+  const cancelInterview = (payload) => {
+    dispatch(cancelCandidateInterview(payload));
   };
 
   useEffect(() => {
